@@ -40,45 +40,57 @@ function RecruitService() {
 
 		var query = {};
 		query[identifier] = id;
-		Recruit.findOne(query, function(err,recruit){
-			deferred.resolve(recruit);
+		Recruit.find(query, function(err,recruits){
+			deferred.resolve(recruits);
 		});
 
 		return deferred.promise;
 	};
 
-	self.getByExternalLinks = function(link){
-		var deferred = when.defer();
-		var urlobj = url.parse(link);
+	self.find = function(searchString){
+		var urlobj = url.parse(searchString);
 		var connection = helpers.getFromSupportedConnection(urlobj.host);
-
 		if(connection){
+			return self.getByExternalLinks(connection, urlobj);
+		}else{
+			return self.getByName(searchString);
+		}
+	};
+
+
+	self.getByName = function(name){
+		var deferred = when.defer();
+		var nameLower = name.toLowerCase();
+		Recruit.find({searchableName: { "$regex": nameLower, "$options": "i" }}, function(err, recruits) {
+			deferred.resolve({
+				source: 'name',
+				recruits: recruits,
+			});
+		});
+		return deferred.promise;
+	};
+
+
+	self.getByExternalLinks = function(connection, urlobj){
+		var deferred = when.defer();
 			var id = connection.getIdFromPath(urlobj.pathname);
 
 			self.getByConnectionId(connection.idPath, id)
-			.then(function(recruit){
-				if(recruit){
+			.then(function(recruits){
+				if(recruits){
 						deferred.resolve({
-							result:"FOUND_EXACT_MATCH",
 							id: id,
 							source: connection.id,
-							recruit: recruit,
+							recruits: recruits,
 						});
 				}else{
 					deferred.resolve({
-						result:"NOT_FOUND",
 						id: id,
 						source: urlobj.host,
+						recruits: [],
 					});
 				}
 			});
-
-		}
-		else{
-			deferred.resolve({
-				result:"LINK_NOT_SUPPORTED",
-			});
-		}
 
 		return deferred.promise;
 	};

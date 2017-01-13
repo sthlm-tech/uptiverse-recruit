@@ -19,7 +19,7 @@ module.exports = function() {
 	});
 
 	App.Express.post( baseUrl + "/find", function (req, res) {
-			recruits.getByExternalLinks(req.body.link)
+			recruits.find(req.body.link)
 			.then(function(response) {
 				res.send(response);
 			});

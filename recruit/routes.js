@@ -1,5 +1,5 @@
-var App = require("./../core/core");
-var recruits = require("./recruits")	;
+var App = require("ms-core");
+var recruits = require("./recruits");
 
 var baseUrl = "/recruits"
 module.exports = function() {

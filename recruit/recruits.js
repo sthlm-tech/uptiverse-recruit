@@ -1,19 +1,9 @@
-var config = require("./../config");
-var mongoose = require('mongoose');
 var Recruit = require("./Recruit");
 var helpers = require("./helpers");
 const url = require('url');
 var when = require('when');
 function RecruitService() {
 	var self = this;
-
-	mongoose.connect(config.db_connectionString);
-
-	var db = mongoose.connection;
-	db.on('error', console.error.bind(console, 'connection error:'));
-	db.once('open', function() {
-	  // we're connected!
-	});
 
 	self.getAll = function(){
 		var deferred = when.defer();

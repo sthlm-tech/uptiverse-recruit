@@ -10,7 +10,12 @@ function helpers(){
       id: "linkedIn",
       idPath: "connections.linkedIn",
       getIdFromPath: function(path){
-        return path.replace("/in/","");
+        var routeParts = path.split("/");
+        var identifier = "in";
+        if(routeParts.length > 1 && routeParts[1] === identifier){
+          return routeParts[2];
+        }
+        return null;
       },
     },
     {

@@ -91,7 +91,10 @@ function RecruitService() {
 
 		recruit.firstname = in_user_data.firstname,
 		recruit.lastname = in_user_data.lastname,
+		recruit.searchableName = (recruit.firstname + " " + recruit.lastname).toLowerCase();
 		recruit.connections[in_user_data.connection] = in_user_data.id;
+		recruit.addedBy = in_user_data.addedBy; //TODO: change this to be fetched from JWT token
+		recruit.added = new Date();
 
 		recruit.save(function(err, createdRecruit){
 			deferred.resolve(createdRecruit);

@@ -18,8 +18,8 @@ function RecruitService() {
 	self.getById = function(id){
 		var deferred = when.defer();
 
-		Recruit.findOne({"_id" : id}, function(err,user){
-			deferred.resolve(user);
+		Recruit.findOne({"_id" : id}, function(err, recruit){
+			deferred.resolve(recruit);
 		});
 
 		return deferred.promise;
@@ -85,13 +85,33 @@ function RecruitService() {
 		return deferred.promise;
 	};
 
+	self.save = function(in_user_data){
+		var deferred = when.defer();
+
+		if(!in_user_data._id){
+			self.create(in_user_data)
+			.then(function(createdRecruit){
+				deferred.resolve(createdRecruit);
+			});
+		}
+		else{
+			self.getById(in_user_data._id)
+			.then(function(recruit){
+				updateRecruit(recruit, in_user_data);
+				recruit.save(function(err, updatedRecruit){
+					deferred.resolve(updatedRecruit);
+				});
+			});
+		}
+
+		return deferred.promise;
+	};
+
 	self.create = function(in_user_data){
 		var deferred = when.defer();
 		var recruit = new Recruit();
 
-		recruit.firstname = in_user_data.firstname,
-		recruit.lastname = in_user_data.lastname,
-		recruit.searchableName = (in_user_data.firstname + " " + in_user_data.lastname).toLowerCase();
+		updateRecruit(recruit, in_user_data);
 		recruit.connections[in_user_data.connection] = in_user_data.id;
 		recruit.addedBy = in_user_data.addedBy; //TODO: change this to be fetched from JWT token
 		recruit.added = new Date();
@@ -103,5 +123,14 @@ function RecruitService() {
 		return deferred.promise;
 	}
 
+}
+
+function updateRecruit(recruit, data){
+	recruit.firstname = data.firstname,
+	recruit.lastname = data.lastname,
+	recruit.searchableName = (data.firstname + " " + data.lastname).toLowerCase();
+	recruit.connections = data.connections;
+
+	return recruit;
 }
 module.exports = new RecruitService();

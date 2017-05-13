@@ -18,6 +18,13 @@ module.exports = function() {
 			});
 	});
 
+	App.Express.post( baseUrl + "/save", function (req, res) {
+			recruits.save(req.body.recruit)
+			.then(function(response) {
+				res.send(response);
+			});
+	});
+
 	App.Express.post( baseUrl + "/find", function (req, res) {
 			recruits.find(req.body.link)
 			.then(function(response) {

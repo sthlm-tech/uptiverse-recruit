@@ -6,7 +6,10 @@ var recruitSchema = mongoose.Schema({
     searchableName: String,
     connections: {
       linkedIn: String,
-      facebook: String
+      facebook: String,
+      github: String,
+      phone: String,
+      mail: String
     },
     createdBy: Object,
     created: Date

@@ -32,6 +32,13 @@ module.exports = function() {
 			});
 	});
 
+	App.Express.get( baseUrl + "/search/:query", function (req, res) {
+			recruits.find(req.params.query)
+			.then(function(response) {
+				res.send(response);
+			});
+	});
+
 	App.Express.post( baseUrl + "/create", function (req, res) {
 			recruits.create(req.body.recruit)
 			.then(function(response) {

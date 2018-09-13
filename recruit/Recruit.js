@@ -12,7 +12,8 @@ var recruitSchema = mongoose.Schema({
       mail: String
     },
     createdBy: Object,
-    created: Date
+    created: Date,
+    interview: Object
 
 });
 

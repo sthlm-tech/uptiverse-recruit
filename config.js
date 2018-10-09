@@ -4,13 +4,16 @@ module.exports = {
 	cacheEnabled: false,
 	cacheDuration: 3600000,
 	db_connectionString: process.env.MONGODB_URI || "",
+	auth: {
+		authServiceUrl: process.env.AUTH_SERVICE_URL || ""
+	},
 	communicator:{
-		path: process.env.COMMUNICATOR_PATH || "",
-		token: process.env.COMMUNICATOR_TOKEN || ""
+		path: process.env.COMMUNICATOR_PATH || ""
 	},
 	service: {
 		name: "uptiverse-recruit",
-		host: process.env.SERVICE_URL || ""
+		host: process.env.SERVICE_URL || "",
+		secret: process.env.SERVICE_SECRET || ""
 	},
 	pulse: {
 		shouldRegister: true,

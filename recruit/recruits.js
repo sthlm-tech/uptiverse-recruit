@@ -130,7 +130,9 @@ function updateRecruit(recruit, data){
 	recruit.lastname = data.lastname,
 	recruit.searchableName = (data.firstname + " " + data.lastname).toLowerCase();
 	recruit.connections = data.connections;
-
+	if(data.interview){
+		recruit.interview = data.interview
+	}
 	return recruit;
 }
 module.exports = new RecruitService();

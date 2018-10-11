@@ -11,7 +11,7 @@ module.exports = {
 		path: process.env.COMMUNICATOR_PATH || ""
 	},
 	service: {
-		name: "uptiverse-recruit",
+		name: "uptiverse-recruits",
 		host: process.env.SERVICE_URL || "",
 		secret: process.env.SERVICE_SECRET || ""
 	},

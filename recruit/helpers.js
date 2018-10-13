@@ -35,6 +35,17 @@ function helpers(){
 
   self.getUserInfoFromLink = function(connection, url){
   };
+
+  self.isPropertySearch = function(searchString){
+    const hasDots = searchString.indexOf(".") != -1;
+    const hasColon = searchString.indexOf(":") != -1;
+    return hasDots && hasColon;
+  }
+
+  self.getPropertyToSearch = function(searchString){
+    var res = searchString.split(":");
+    return {property:res[0], value: res[1]};
+  }
 };
 
 module.exports = new helpers();

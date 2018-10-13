@@ -7,9 +7,11 @@ function RecruitService() {
 
 	self.getAll = function(){
 		var deferred = when.defer();
-
-		Recruit.find(function(err, users) {
-			deferred.resolve(users);
+		Recruit.find(function(err, recruits) {
+			deferred.resolve({
+				source: 'name',
+				recruits: recruits,
+			});
 	  });
 
 		return deferred.promise;
@@ -25,7 +27,7 @@ function RecruitService() {
 		return deferred.promise;
 	};
 
-	self.getByConnectionId = function(identifier,id){
+	self.getByProperty = function(identifier,id){
 		var deferred = when.defer();
 
 		var query = {};
@@ -40,13 +42,32 @@ function RecruitService() {
 	self.find = function(searchString){
 		var urlobj = url.parse(searchString);
 		var connection = helpers.getFromSupportedConnection(urlobj.host);
-		if(connection){
+		if(searchString === "*"){
+			return self.getAll();
+		}else if(connection){
 			return self.getByExternalLinks(connection, urlobj);
-		}else{
+		}else if(helpers.isPropertySearch(searchString)){
+			var s = helpers.getPropertyToSearch(searchString);
+			return self.getBySearchProperty(s.property, s.value);
+		}
+		else{
 			return self.getByName(searchString);
 		}
 	};
 
+	self.getBySearchProperty = function(property, value){
+		var deferred = when.defer();
+		var q = {};
+		q[property] = value;
+		self.getByProperty(property,value)
+		.then(function(recruits){
+			deferred.resolve({
+				source: 'property',
+				recruits: recruits,
+			});
+		});
+		return deferred.promise;
+	};
 
 	self.getByName = function(name){
 		var deferred = when.defer();
@@ -65,7 +86,7 @@ function RecruitService() {
 		var deferred = when.defer();
 			var id = connection.getIdFromPath(urlobj.pathname);
 
-			self.getByConnectionId(connection.idPath, id)
+			self.getByProperty(connection.idPath, id)
 			.then(function(recruits){
 				if(recruits){
 						deferred.resolve({
